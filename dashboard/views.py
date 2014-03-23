@@ -3,10 +3,13 @@ from django.db.models import Sum, Avg
 from models import *
 import json
 
-def get_summary(request):
+def get_summary(request, scrip_id=None):
     ''' Returns data for summary screen '''
 
-    summary = Transaction.objects.values('scrip__scrip_id', 'scrip__scrip_name', 'scrip__mkt_value', 'transaction_type').annotate(avg_rate=Avg('rate'), total_qty=Sum('qty')).order_by('scrip', 'transaction_type')
+    if scrip_id:
+	summary = Transaction.objects.filter(scrip_id=scrip_id).values('scrip__scrip_id', 'scrip__scrip_name', 'scrip__mkt_value', 'transaction_type').annotate(avg_rate=Avg('rate'), total_qty=Sum('qty')).order_by('scrip', 'transaction_type')
+    else:
+	summary = Transaction.objects.values('scrip__scrip_id', 'scrip__scrip_name', 'scrip__mkt_value', 'transaction_type').annotate(avg_rate=Avg('rate'), total_qty=Sum('qty')).order_by('scrip', 'transaction_type')
     computed_fields = _compute_fields(summary)
     serialized_data = json.dumps(computed_fields)
     return HttpResponse(serialized_data)

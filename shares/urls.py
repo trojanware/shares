@@ -1,17 +1,11 @@
 from django.conf.urls import patterns, include, url
+from dashboard import views
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'shares.views.home', name='home'),
-    # url(r'^shares/', include('shares.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    # url(r'^admin/', include(admin.site.urls)),
+    url(r'^summary/$', views.get_summary),
+    url(r'^summary/(?P<scrip_id>\w+)/$', views.get_summary),
 )
